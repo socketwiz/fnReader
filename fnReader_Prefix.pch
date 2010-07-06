@@ -1,0 +1,7 @@
+//
+// Prefix header for all source files of the 'fnReader' target in the 'fnReader' project
+//
+
+#ifdef __OBJC__
+    #import <Cocoa/Cocoa.h>
+#endif

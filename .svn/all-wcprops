@@ -1,0 +1,227 @@
+K 25
+svn:wc:ra_dav:version-url
+V 40
+/larksoftware/!svn/ver/38/fnReader/trunk
+END
+Error.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/larksoftware/!svn/ver/71/fnReader/trunk/Error.h
+END
+CTBadge.h
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/larksoftware/!svn/ver/64/fnReader/trunk/CTBadge.h
+END
+main.m
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/larksoftware/!svn/ver/71/fnReader/trunk/main.m
+END
+document_info.tiff
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/larksoftware/!svn/ver/77/fnReader/trunk/document_info.tiff
+END
+Error.m
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/larksoftware/!svn/ver/71/fnReader/trunk/Error.m
+END
+CTBadge.m
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/larksoftware/!svn/ver/64/fnReader/trunk/CTBadge.m
+END
+read.tiff
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/larksoftware/!svn/ver/55/fnReader/trunk/read.tiff
+END
+MyWindowController.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/larksoftware/!svn/ver/110/fnReader/trunk/MyWindowController.h
+END
+ImageToBoolTransformer.h
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/larksoftware/!svn/ver/72/fnReader/trunk/ImageToBoolTransformer.h
+END
+CTGradient.h
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/larksoftware/!svn/ver/64/fnReader/trunk/CTGradient.h
+END
+document_edit.tiff
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/larksoftware/!svn/ver/77/fnReader/trunk/document_edit.tiff
+END
+app.icns
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/larksoftware/!svn/ver/33/fnReader/trunk/app.icns
+END
+MyWindowController.m
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/larksoftware/!svn/ver/111/fnReader/trunk/MyWindowController.m
+END
+fnReader_Prefix.pch
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/larksoftware/!svn/ver/14/fnReader/trunk/fnReader_Prefix.pch
+END
+unread_header.tiff
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/larksoftware/!svn/ver/14/fnReader/trunk/unread_header.tiff
+END
+document_attachment.tiff
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/larksoftware/!svn/ver/55/fnReader/trunk/document_attachment.tiff
+END
+add.tiff
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/larksoftware/!svn/ver/77/fnReader/trunk/add.tiff
+END
+CTGradient.m
+K 25
+svn:wc:ra_dav:version-url
+V 53
+/larksoftware/!svn/ver/64/fnReader/trunk/CTGradient.m
+END
+ImageToBoolTransformer.m
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/larksoftware/!svn/ver/71/fnReader/trunk/ImageToBoolTransformer.m
+END
+nuts.tiff
+K 25
+svn:wc:ra_dav:version-url
+V 50
+/larksoftware/!svn/ver/55/fnReader/trunk/nuts.tiff
+END
+feed-icon.tiff
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/larksoftware/!svn/ver/55/fnReader/trunk/feed-icon.tiff
+END
+ChildEditController.h
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/larksoftware/!svn/ver/71/fnReader/trunk/ChildEditController.h
+END
+Info.plist
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/larksoftware/!svn/ver/55/fnReader/trunk/Info.plist
+END
+Entry.h
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/larksoftware/!svn/ver/79/fnReader/trunk/Entry.h
+END
+attachment_header.tiff
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/larksoftware/!svn/ver/14/fnReader/trunk/attachment_header.tiff
+END
+flagged_header.tiff
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/larksoftware/!svn/ver/14/fnReader/trunk/flagged_header.tiff
+END
+ChildEditController.m
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/larksoftware/!svn/ver/109/fnReader/trunk/ChildEditController.m
+END
+delete.tiff
+K 25
+svn:wc:ra_dav:version-url
+V 52
+/larksoftware/!svn/ver/77/fnReader/trunk/delete.tiff
+END
+Feed.h
+K 25
+svn:wc:ra_dav:version-url
+V 47
+/larksoftware/!svn/ver/73/fnReader/trunk/Feed.h
+END
+flag_red.tiff
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/larksoftware/!svn/ver/55/fnReader/trunk/flag_red.tiff
+END
+Entry.m
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/larksoftware/!svn/ver/79/fnReader/trunk/Entry.m
+END
+Feed.m
+K 25
+svn:wc:ra_dav:version-url
+V 48
+/larksoftware/!svn/ver/111/fnReader/trunk/Feed.m
+END
+AppDelegate.h
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/larksoftware/!svn/ver/71/fnReader/trunk/AppDelegate.h
+END
+flag_red_large.tiff
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/larksoftware/!svn/ver/77/fnReader/trunk/flag_red_large.tiff
+END
+Prefix.pch
+K 25
+svn:wc:ra_dav:version-url
+V 51
+/larksoftware/!svn/ver/71/fnReader/trunk/Prefix.pch
+END
+AppDelegate.m
+K 25
+svn:wc:ra_dav:version-url
+V 54
+/larksoftware/!svn/ver/75/fnReader/trunk/AppDelegate.m
+END
+scroll_ok.tiff
+K 25
+svn:wc:ra_dav:version-url
+V 55
+/larksoftware/!svn/ver/77/fnReader/trunk/scroll_ok.tiff
+END
