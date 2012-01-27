@@ -66,8 +66,8 @@
 	CTBadge						*_myBadge;
 }
 
-@property (retain) NSArray *dragNodesArray;
-@property (retain, readwrite) NSMutableArray *feeds;
+@property (strong) NSArray *dragNodesArray;
+@property (strong, readwrite) NSMutableArray *feeds;
 
 - (IBAction) addFeedAction:(id)sender;
 - (IBAction) editFeedAction:(id)sender;
