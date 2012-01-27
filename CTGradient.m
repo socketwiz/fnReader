@@ -52,15 +52,13 @@ static void resolveHSV(float *color1, float *color2);
   {
   CGFunctionRelease(gradientFunction);
   
-  CTGradientElement *elementToRemove = elementList;
+  CTGradientElement *elementToRemove;
   while(elementList != nil)
 	{
 	elementToRemove = elementList;
 	elementList = elementList->nextElement;
 	free(elementToRemove);
 	}
-  
-  [super dealloc];
   }
 
 - (id)copyWithZone:(NSZone *)zone
@@ -153,7 +151,7 @@ static void resolveHSV(float *color1, float *color2);
   [newInstance addElement:&color1];
   [newInstance addElement:&color2];
   
-  return [newInstance autorelease];
+  return newInstance;
   }
 
 + (id)aquaSelectedGradient
@@ -193,7 +191,7 @@ static void resolveHSV(float *color1, float *color2);
   [newInstance addElement:&color3];
   [newInstance addElement:&color4];
   
-  return [newInstance autorelease];
+  return newInstance;
   }
 
 + (id)aquaNormalGradient
@@ -225,7 +223,7 @@ static void resolveHSV(float *color1, float *color2);
   [newInstance addElement:&color3];
   [newInstance addElement:&color4];
   
-  return [newInstance autorelease];
+  return newInstance;
   }
 
 + (id)aquaPressedGradient
@@ -257,7 +255,7 @@ static void resolveHSV(float *color1, float *color2);
   [newInstance addElement:&color3];
   [newInstance addElement:&color4];
   
-  return [newInstance autorelease];
+  return newInstance;
   }
 
 + (id)unifiedSelectedGradient
@@ -277,7 +275,7 @@ static void resolveHSV(float *color1, float *color2);
   [newInstance addElement:&color1];
   [newInstance addElement:&color2];
   
-  return [newInstance autorelease];
+  return newInstance;
   }
 
 + (id)unifiedNormalGradient
@@ -297,7 +295,7 @@ static void resolveHSV(float *color1, float *color2);
   [newInstance addElement:&color1];
   [newInstance addElement:&color2];
   
-  return [newInstance autorelease];
+  return newInstance;
   }
 
 + (id)unifiedPressedGradient
@@ -317,7 +315,7 @@ static void resolveHSV(float *color1, float *color2);
   [newInstance addElement:&color1];
   [newInstance addElement:&color2];
   
-  return [newInstance autorelease];
+  return newInstance;
   }
 
 + (id)unifiedDarkGradient
@@ -337,7 +335,7 @@ static void resolveHSV(float *color1, float *color2);
   [newInstance addElement:&color1];
   [newInstance addElement:&color2];
   
-  return [newInstance autorelease];
+  return newInstance;
   }
 
 + (id)sourceListSelectedGradient
@@ -361,7 +359,7 @@ static void resolveHSV(float *color1, float *color2);
   [newInstance addElement:&color1];
   [newInstance addElement:&color2];
   
-  return [newInstance autorelease];
+  return newInstance;
   }
 
 + (id)sourceListUnselectedGradient
@@ -385,7 +383,7 @@ static void resolveHSV(float *color1, float *color2);
   [newInstance addElement:&color1];
   [newInstance addElement:&color2];
   
-  return [newInstance autorelease];
+  return newInstance;
   }
 
 + (id)rainbowGradient
@@ -411,7 +409,7 @@ static void resolveHSV(float *color1, float *color2);
   
   [newInstance setBlendingMode:CTChromaticBlendingMode];
   
-  return [newInstance autorelease];
+  return newInstance;
   }
 
 + (id)hydrogenSpectrumGradient
@@ -486,7 +484,7 @@ static void resolveHSV(float *color1, float *color2);
   
   [newInstance setBlendingMode:CTChromaticBlendingMode];
   
-  return [newInstance autorelease];
+  return newInstance;
   }
 
 #pragma mark -
@@ -510,7 +508,7 @@ static void resolveHSV(float *color1, float *color2);
 	curElement = curElement->nextElement;
 	}
   
-  return [newInstance autorelease];
+  return newInstance;
   }
 
 - (CTGradient *)gradientWithBlendingMode:(CTGradientBlendingMode)mode
@@ -519,7 +517,7 @@ static void resolveHSV(float *color1, float *color2);
   
   [newGradient setBlendingMode:mode];
   
-  return [newGradient autorelease];
+  return newGradient;
   }
 
 
@@ -540,7 +538,7 @@ static void resolveHSV(float *color1, float *color2);
   //Pass it off to addElement to take care of adding it to the elementList
   [newGradient addElement:&newGradientElement];
   
-  return [newGradient autorelease];
+  return newGradient;
   }
 
 
@@ -553,7 +551,7 @@ static void resolveHSV(float *color1, float *color2);
   if(isnan(removedElement.position))
 	[NSException raise:NSRangeException format:@"-[%@ removeColorStopAtPosition:]: no such colorStop at position (%f)", [self class], position];
   
-  return [newGradient autorelease];
+  return newGradient;
   }
 
 - (CTGradient *)removeColorStopAtIndex:(unsigned)index
@@ -564,7 +562,7 @@ static void resolveHSV(float *color1, float *color2);
   if(isnan(removedElement.position))
 	[NSException raise:NSRangeException format:@"-[%@ removeColorStopAtIndex:]: index (%i) beyond bounds", [self class], index];
   
-  return [newGradient autorelease];
+  return newGradient;
   }
 #pragma mark -
 
@@ -760,8 +758,7 @@ static void resolveHSV(float *color1, float *color2);
 	[path addClip];
 	[self fillRect:[path bounds] angle:0];
 	[path transformUsingAffineTransform:transform];
-	[transform release];
-  [currentContext restoreGraphicsState];
+    [currentContext restoreGraphicsState];
   }
 - (void)radialFillBezierPath:(NSBezierPath *)path
   {
@@ -798,8 +795,8 @@ static void resolveHSV(float *color1, float *color2);
     
   CGFunctionCallbacks evaluationCallbackInfo = {0 , evaluationFunction, NULL};	//Version, evaluator function, cleanup function
   
-  static const float input_value_range   [2] = { 0, 1 };						//range  for the evaluator input
-  static const float output_value_ranges [8] = { 0, 1, 0, 1, 0, 1, 0, 1 };		//ranges for the evaluator output (4 returned values)
+  CGFloat input_value_range   [2] = { 0, 1 };						//range  for the evaluator input
+  CGFloat output_value_ranges [8] = { 0, 1, 0, 1, 0, 1, 0, 1 };		//ranges for the evaluator output (4 returned values)
   
   gradientFunction = CGFunctionCreate(&elementList,					//the two transition colors
 									  1, input_value_range  ,		//number of inputs (just fraction of progression)
@@ -1184,7 +1181,9 @@ void inverseChromaticEvaluation(void *info, const float *in, float *out)
 
 void transformRGB_HSV(float *components) //H,S,B -> R,G,B
 	{
-	float H, S, V;
+        float H = 0.0;
+        float S = 0.0;
+        float V = 0.0;
 	float R = components[0],
 		  G = components[1],
 		  B = components[2];
@@ -1214,7 +1213,9 @@ void transformRGB_HSV(float *components) //H,S,B -> R,G,B
 
 void transformHSV_RGB(float *components) //H,S,B -> R,G,B
 	{
-	float R, G, B;
+        float R = 0.0;
+        float G = 0.0;
+        float B = 0.0;
 	float H = fmodf(components[0],359),	//map to [0,360)
 		  S = components[1],
 		  V = components[2];
