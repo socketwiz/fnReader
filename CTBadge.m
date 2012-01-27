@@ -38,21 +38,12 @@ const float CTSmallLabelSize = 11.;
   return self;
   }
 
-- (void)dealloc
-  {
-  if(badgeColor != nil)
-	[badgeColor release];
-  if(labelColor != nil)
-    [labelColor release];
-  
-  [super dealloc];
-  }
 
 + (CTBadge *)systemBadge
   {
   id newInstance = [[[self class] alloc] init];
   
-  return [newInstance autorelease];
+  return newInstance;
   }
 
 + (CTBadge *)badgeWithColor:(NSColor *)badgeColor labelColor:(NSColor *)labelColor;
@@ -62,7 +53,7 @@ const float CTSmallLabelSize = 11.;
   [newInstance setBadgeColor:badgeColor];
   [newInstance setLabelColor:labelColor];
   
-  return [newInstance autorelease];
+  return newInstance;
   }
 #pragma mark -
 
@@ -70,19 +61,13 @@ const float CTSmallLabelSize = 11.;
 #pragma mark Appearance
 - (void)setBadgeColor:(NSColor *)theColor;
   {
-  if(badgeColor != nil)
-	[badgeColor release];
   
   badgeColor = theColor;
-  [badgeColor retain];
   }
 - (void)setLabelColor:(NSColor *)theColor;
   {
-  if(labelColor != nil)
-	[labelColor release];
   
   labelColor = theColor;
-  [labelColor retain];
   }
 
 - (NSColor *)badgeColor
@@ -172,7 +157,6 @@ const float CTSmallLabelSize = 11.;
 	[badgeMask compositeToPoint:origin operation: NSCompositeDestinationAtop];															//knock out the badge area
 	[label drawInRect:NSMakeRect(origin.x+floorf((badgeSize.width-labelSize.width)/2), origin.y+floorf((badgeSize.height-labelSize.height)/2), badgeSize.width, labelSize.height)];	//draw label in center
   [badgeImage unlockFocus];
-  [badgeMask release];
   
   //Final stuff   -----------------------------------------------
   NSImage *image = [[NSImage alloc] initWithSize:[badgeImage size]];
@@ -184,15 +168,12 @@ const float CTSmallLabelSize = 11.;
 	  [theShadow setShadowBlurRadius:shadowBlurRadius];
 	  [theShadow setShadowColor:[[NSColor blackColor] colorWithAlphaComponent:shadowOpacity]];
 	  [theShadow set];
-	  [theShadow release];
 	  [badgeImage compositeToPoint:NSZeroPoint operation:NSCompositeSourceOver];
 	[NSGraphicsContext restoreGraphicsState];
   [image unlockFocus];
   
-  [label release];
-  [badgeImage release];
   
-  return [image autorelease];
+  return image;
   }
 
 
@@ -207,7 +188,7 @@ const float CTSmallLabelSize = 11.;
 	  [badgeImage compositeToPoint:NSMakePoint(128-dx-badgeSize.width,128-dy-badgeSize.height) operation:NSCompositeSourceOver];  
   [overlayImage unlockFocus];
   
-  return [overlayImage autorelease];
+  return overlayImage;
   }
 
 - (void)badgeApplicationDockIconWithValue:(unsigned)value insetX:(float)dx y:(float)dy
@@ -248,7 +229,6 @@ const float CTSmallLabelSize = 11.;
   NSMutableParagraphStyle *pStyle = [[NSMutableParagraphStyle alloc] init];[pStyle setAlignment:NSCenterTextAlignment];
   NSDictionary *attributes = [[NSDictionary alloc] initWithObjectsAndKeys:[self labelColor], NSForegroundColorAttributeName,
 																		  labelFont        , NSFontAttributeName           , nil];
-  [pStyle release];
   
   //Label stuff
   NSString *label;
@@ -259,8 +239,6 @@ const float CTSmallLabelSize = 11.;
 	label = [[NSString alloc] initWithUTF8String:"\xe2\x88\x9e"];
   
   NSAttributedString *attributedString = [[NSAttributedString alloc] initWithString:label attributes:attributes];
-  [label release];
-  [attributes release];
   
   return attributedString;
   }
