@@ -42,15 +42,6 @@
 }
 
 // -------------------------------------------------------------------------------
-//	dealloc:
-// -------------------------------------------------------------------------------
-- (void)dealloc
-{
-	[super dealloc];
-	[savedFields release];
-}
-
-// -------------------------------------------------------------------------------
 //	edit:startingValues:from
 // -------------------------------------------------------------------------------
 - (NSMutableDictionary*)edit:(NSDictionary*)startingValues from:(MyWindowController*)sender
@@ -62,7 +53,7 @@
 	if (startingValues != nil)
 	{
 		// we are editing current entry, use its values as the default
-		savedFields = [startingValues retain];
+		savedFields = (NSMutableDictionary *)startingValues;
 
 		// clear first
 		[[[urlView textStorage] mutableString] setString:@""];
@@ -77,7 +68,7 @@
 	}
 	
 	[NSApp beginSheet: window 
-	   modalForWindow: [sender window] 
+	   modalForWindow: [(NSWindowController *)sender window] 
 		modalDelegate: nil 
 	   didEndSelector: nil 
 		  contextInfo: nil];
@@ -122,14 +113,12 @@
 	}
 	
 	// save the values for later
-	[savedFields release];
 
 	NSString *trimmedUrl = [[[urlView textStorage] string] stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 	NSURL* urlStr =  [self SmartURLFromString: trimmedUrl
 								  withSchemes: [NSArray arrayWithObjects: @"http",@"https",@"file",@"feed",nil]];
 
 	savedFields = [NSMutableDictionary dictionaryWithObjectsAndKeys: urlStr, @"url", nil];
-	[savedFields retain];
 	
 	[NSApp stopModal];
 }
