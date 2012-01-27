@@ -47,14 +47,6 @@
     return self;
 }
 
-- (void) dealloc
-{
-	[_read release];
-	[_flagged release];
-	[_attachment release];
-
-    [super dealloc];
-}
 
 #pragma mark -
 #pragma mark ACCESSOR METHODS
@@ -260,16 +252,17 @@
 		if( !sTemplate )
 		{
 			NSString *path = [[NSBundle mainBundle] pathForResource: @"EntryTemplate" ofType: @"html"];
-			sTemplate = [[NSString alloc] initWithContentsOfFile: path];
+            NSError *error;
+            sTemplate = [[NSString alloc] initWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
 			NSAssert(sTemplate,@"Can't load EntryTemplate.html");
 			
 			path = [[NSBundle mainBundle] pathForResource: @"EntryTemplate_NoLink" ofType: @"html"];
-			sNoLinkTemplate = [[NSString alloc] initWithContentsOfFile: path];
+            sNoLinkTemplate = [[NSString alloc] initWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
 			NSAssert(sNoLinkTemplate,@"Can't load EntryTemplate.html");
 		}
 		
 		NSString *template = [link length] ? sTemplate : sNoLinkTemplate;
-		NSMutableString *html = [[template mutableCopy] autorelease];
+		NSMutableString *html = [template mutableCopy];
 		
 		// Now, replace some constants that occur in the templates with our entry's data
 		[html replaceOccurrencesOfString: @"{BASE}" withString: base
@@ -391,7 +384,8 @@
     static NSString *sTemplate;
     if( ! sTemplate ) {
         NSString *path = [[NSBundle mainBundle] pathForResource: @"EnclosureTemplate" ofType: @"html"];
-        sTemplate = [[NSString alloc] initWithContentsOfFile: path];
+        NSError *error;
+        sTemplate = [[NSString alloc] initWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
         NSAssert(sTemplate,@"Can't load EnclosureTemplate.html");
     }
 	
@@ -404,7 +398,7 @@
     NSString *lengthStr = length ?[NSString stringWithFormat: @"(%.0f KB)", length/1024.0]
 	: @"";
     
-    NSMutableString *html = [[sTemplate mutableCopy] autorelease];
+    NSMutableString *html = [sTemplate mutableCopy];
     [html replaceOccurrencesOfString: @"{URL}" withString: urlStr
 							 options: 0 range: NSMakeRange(0,[html length])];
     [html replaceOccurrencesOfString: @"{NAME}" withString: name
