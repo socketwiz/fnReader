@@ -39,18 +39,12 @@
 	}
 	return self;
 }
-- (void) dealloc
-{
-	[_alert release];
-	[super dealloc];
-}
 
 - (int) errorAlert:(NSException *) e
    informationText:(NSString *) info
 		buttonText:(NSString *) button
 		alertStyle:(int) style
 {
-	[_alert autorelease];
     [self printStackTrace:e];
 	
 	[_alert addButtonWithTitle:button];
@@ -108,7 +102,6 @@
         [ls setLaunchPath:@"/usr/bin/atos"];
         [ls setArguments:args];
         [ls launch];
-        [ls release];
 		
     } else {
         NSLog(@"No stack trace available.");
