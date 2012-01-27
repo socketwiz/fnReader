@@ -50,9 +50,9 @@
 // -------------------------------------------------------------------------------
 @interface TreeAdditionObj : NSObject
 {
-	NSIndexPath *indexPath;
-	NSString	*nodeURL;
-	NSString	*nodeName;
+	NSIndexPath *__weak indexPath;
+	NSString	*__weak nodeURL;
+	NSString	*__weak nodeName;
 	BOOL		selectItsParent;
 }
 
@@ -104,25 +104,8 @@
 }
 - (void)performClose:(id)sender
 {
-	[feeds release];
-	[_error release];
-	[childEditController release];
 	
 	self.dragNodesArray = nil;
-}
-
-// -------------------------------------------------------------------------------
-//	dealloc:
-// -------------------------------------------------------------------------------
-- (void)dealloc
-{
-	[feeds release];
-	[_error release];
-	[childEditController release];
-	
-	self.dragNodesArray = nil;
-	
-	[super dealloc];
 }
 
 // -------------------------------------------------------------------------------
@@ -485,18 +468,17 @@
 	NSMutableArray *newFeeds = [[NSMutableArray alloc] init];	
 	
 	for (PSFeed *curFeed in curFeeds) {
-		NSAutoreleasePool *loopPool = [[NSAutoreleasePool alloc] init];
-		Feed *newFeed = [[[Feed alloc] init] autorelease];
-		
-		newFeed.feed = curFeed;
+		@autoreleasepool {
+			Feed *newFeed = [[Feed alloc] init];
+			
+			newFeed.feed = curFeed;
 
-		[newFeeds addObject:newFeed];
-		[loopPool release];
+			[newFeeds addObject:newFeed];
+		}
 	}
 	
 	[self setFeeds:newFeeds];
 	
-	[newFeeds release];
 }
 
 // -------------------------------------------------------------------------------
@@ -507,31 +489,31 @@
 // -------------------------------------------------------------------------------
 - (void)populateOutlineContents:(id)inObject
 {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	@autoreleasepool {
 	
-	buildingTableView = YES;		// indicate to ourselves we are building the tables at startup
+		buildingTableView = YES;		// indicate to ourselves we are building the tables at startup
 
-	[tblFeedsView setHidden:YES];	// hide the feed view - don't show it as we are building the contents
+		[tblFeedsView setHidden:YES];	// hide the feed view - don't show it as we are building the contents
 
-	[self formatTableColumns];
-	[self populateOutline];			// add the PubSub outline content
+		[self formatTableColumns];
+		[self populateOutline];			// add the PubSub outline content
 
-	buildingTableView = NO;			// we're done building our tables
+		buildingTableView = NO;			// we're done building our tables
 
-	
-	[tblFeedsView setHidden:NO];	// we are done populating the outline view content, show it again	
+		
+		[tblFeedsView setHidden:NO];	// we are done populating the outline view content, show it again	
 
-	// preserve column sorting
-	[tblEntriesView setAutosaveTableColumns: YES];
-	[tblEntriesView setAutosaveName: @"tableEntries"];
-	[tblEntriesView selectRowIndexes:0 byExtendingSelection:NO];
-	
-	// preserve window sizes
-	[self setWindowFrameAutosaveName:@"fnReader"];
-	
-	[self updateUnreadCount];
+		// preserve column sorting
+		[tblEntriesView setAutosaveTableColumns: YES];
+		[tblEntriesView setAutosaveName: @"tableEntries"];
+		[tblEntriesView selectRowIndexes:0 byExtendingSelection:NO];
+		
+		// preserve window sizes
+		[self setWindowFrameAutosaveName:@"fnReader"];
+		
+		[self updateUnreadCount];
 
-	[pool release];
+	}
 }
 
 #pragma mark -
@@ -735,8 +717,6 @@ decisionListener:(id<WebPolicyDecisionListener>)listener
 		[appendedFeeds addObject:newFeed];
 		[self setFeeds:appendedFeeds];
 		
-		[newFeed release];
-		[appendedFeeds release];
 	}
 	else
 	{
@@ -748,34 +728,33 @@ decisionListener:(id<WebPolicyDecisionListener>)listener
 			
 			for (PSEntry *curEntry in [psFeed entries])
 			{
-				NSAutoreleasePool *loopPool = [[NSAutoreleasePool alloc] init];
-				BOOL bFoundEntry = NO;
-				
-				for (Entry *theEntry in appendedEntries)
-				{
-					if ([theEntry entry] == curEntry)
-					{
-						bFoundEntry = YES;
-					}
-				}
-
-				if (bFoundEntry == NO)
-				{
-					Entry *newEntry = [[[Entry alloc] init] autorelease];
-					NSLog(@"%@ ENTRY does not exist in Feed[%@]\n", curEntry, psFeed);
+				@autoreleasepool {
+					BOOL bFoundEntry = NO;
 					
-					newEntry.entry = curEntry;			
-					[appendedEntries addObject:newEntry];
-					curFeed.entries = appendedEntries;
-				}
+					for (Entry *theEntry in appendedEntries)
+					{
+						if ([theEntry entry] == curEntry)
+						{
+							bFoundEntry = YES;
+						}
+					}
 
-				[loopPool release];
+					if (bFoundEntry == NO)
+					{
+						Entry *newEntry = [[Entry alloc] init];
+						NSLog(@"%@ ENTRY does not exist in Feed[%@]\n", curEntry, psFeed);
+						
+						newEntry.entry = curEntry;			
+						[appendedEntries addObject:newEntry];
+						curFeed.entries = appendedEntries;
+					}
+
+				}
 			}
 		}
 		//curFeed.bUpdating = NO;
 	}
 	
-	[psFeeds release];
 }
 
 // A feed has started or stopped refreshing.
@@ -1002,7 +981,7 @@ decisionListener:(id<WebPolicyDecisionListener>)listener
 					// use the url portion without the prefix
 					NSRange prefixRange = [[url absoluteString] rangeOfString:HTTP_PREFIX];
 					NSRange newRange = NSMakeRange(prefixRange.length, [[url absoluteString] length]- prefixRange.length - 1);
-					NSLog(@"URL1[%@] loc[%i] len[%i]", 
+					NSLog(@"URL1[%@] loc[%lu] len[%lu]", 
 						  [url absoluteString],
 						  newRange.location,
 						  newRange.length);
@@ -1070,68 +1049,68 @@ decisionListener:(id<WebPolicyDecisionListener>)listener
 
 - (void)refreshFavicons:(id)inObject
 {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	NSFileManager *fm = [NSFileManager defaultManager];
-	NSString *favIconDirectory = [@"~/Library/Application Support/fnReader" stringByExpandingTildeInPath];
-	
-	BOOL bIsDir = NO;
-	
-	if ([fm fileExistsAtPath:favIconDirectory isDirectory:&bIsDir] == NO)
-	{
-		[fm createDirectoryAtPath:favIconDirectory 
-	  withIntermediateDirectories:YES 
-					   attributes:nil
-							error:nil];
-	}
+	@autoreleasepool {
+		NSFileManager *fm = [NSFileManager defaultManager];
+		NSString *favIconDirectory = [@"~/Library/Application Support/fnReader" stringByExpandingTildeInPath];
+		
+		BOOL bIsDir = NO;
+		
+		if ([fm fileExistsAtPath:favIconDirectory isDirectory:&bIsDir] == NO)
+		{
+			[fm createDirectoryAtPath:favIconDirectory 
+		  withIntermediateDirectories:YES 
+						   attributes:nil
+								error:nil];
+		}
 
-	for (Feed *theFeed in [aryFeedsController arrangedObjects])
-	{
-		@try {
-			NSString *strHost = [theFeed.url host];
-			NSString *hostDirectory = [NSString stringWithFormat:@"%@/%@", 
-									   favIconDirectory, strHost];
-			
-			if ([fm fileExistsAtPath:hostDirectory isDirectory:&bIsDir] == NO)
-			{
-				[fm createDirectoryAtPath:hostDirectory 
-			  withIntermediateDirectories:YES
-							   attributes:nil
-									error:nil];
+		for (Feed *theFeed in [aryFeedsController arrangedObjects])
+		{
+			@try {
+				NSString *strHost = [theFeed.url host];
+				NSString *hostDirectory = [NSString stringWithFormat:@"%@/%@", 
+										   favIconDirectory, strHost];
+				
+				if ([fm fileExistsAtPath:hostDirectory isDirectory:&bIsDir] == NO)
+				{
+					[fm createDirectoryAtPath:hostDirectory 
+				  withIntermediateDirectories:YES
+								   attributes:nil
+										error:nil];
+				}
+				
+				NSString *favIconFile = [NSString stringWithFormat:@"%@/%@",
+										 hostDirectory, @"favicon.ico"];
+				NSString *strUrl =  [NSString stringWithFormat:@"%@://%@/favicon.ico",
+									 [theFeed.url scheme],
+									 strHost];
+				NSURL *favIconUrl = [NSURL URLWithString:strUrl];
+				
+				NSData *favIconData = [NSData dataWithContentsOfURL:favIconUrl];
+				
+				if (favIconData != nil)
+				{
+					[fm createFileAtPath: favIconFile 
+								contents: favIconData
+							  attributes: nil];
+				}
 			}
-			
-			NSString *favIconFile = [NSString stringWithFormat:@"%@/%@",
-									 hostDirectory, @"favicon.ico"];
-			NSString *strUrl =  [NSString stringWithFormat:@"%@://%@/favicon.ico",
-								 [theFeed.url scheme],
-								 strHost];
-			NSURL *favIconUrl = [NSURL URLWithString:strUrl];
-			
-			NSData *favIconData = [NSData dataWithContentsOfURL:favIconUrl];
-			
-			if (favIconData != nil)
-			{
-				[fm createFileAtPath: favIconFile 
-							contents: favIconData
-						  attributes: nil];
+			@catch (NSException * e) {
+				// most likely somebody nuked the feed before we could 
+				// refresh the icon, so move along to the next feed
+				NSLog(@"ERROR: [%@] %@", [e name], [e reason]);
+				continue;
 			}
 		}
-		@catch (NSException * e) {
-			// most likely somebody nuked the feed before we could 
-			// refresh the icon, so move along to the next feed
-			NSLog(@"ERROR: [%@] %@", [e name], [e reason]);
-			continue;
-		}
+		
+		/* 
+		 * once the data has been downloaded refresh the table view
+		 * so we can see the new favicons
+		 *
+		 */
+		[tblFeedsView reloadData];
+		
+		NSLog(@"Icons have been refreshed");
 	}
-	
-	/* 
-	 * once the data has been downloaded refresh the table view
-	 * so we can see the new favicons
-	 *
-	 */
-	[tblFeedsView reloadData];
-	
-	NSLog(@"Icons have been refreshed");
-	[pool release];
 }
 
 - (void) updateUnreadCount
@@ -1165,7 +1144,6 @@ decisionListener:(id<WebPolicyDecisionListener>)listener
 							   iUnreadCount];
 		
 		[[self window] setTitle:fmtUnread];
-		[fmtUnread release];
 	}
 	@catch (NSException * e) {
 		NSLog(@"ERROR: %@", [e reason]);
