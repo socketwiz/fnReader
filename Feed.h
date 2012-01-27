@@ -49,23 +49,23 @@
 	Error		*_error;
 }
 
-@property(readonly) NSImage			*icon;
-@property(readonly)	NSImage			*logo;
-@property(readonly) NSString		*title;
-@property(readonly) NSImage			*unreadCountImg;
+@property(unsafe_unretained, readonly) NSImage			*icon;
+@property(unsafe_unretained, readonly)	NSImage			*logo;
+@property(weak, readonly) NSString		*title;
+@property(unsafe_unretained, readonly) NSImage			*unreadCountImg;
 @property(readonly) int				unreadCount;
-@property(readonly) NSURL			*url;
-@property(readonly) NSURL			*altUrl;
-@property(readonly) NSString		*subTitle;
-@property(readonly) NSString		*rights;
-@property(readonly) NSDate			*updated;
-@property(readonly) NSString		*identifier;
-@property(readonly) NSURL			*redirectedUrl;
-@property(readonly) NSDate			*lastFetch;
-@property(readonly) NSString		*error;
-@property(retain,readwrite) PSFeed	*feed;
+@property(weak, readonly) NSURL			*url;
+@property(weak, readonly) NSURL			*altUrl;
+@property(weak, readonly) NSString		*subTitle;
+@property(weak, readonly) NSString		*rights;
+@property(weak, readonly) NSDate			*updated;
+@property(weak, readonly) NSString		*identifier;
+@property(weak, readonly) NSURL			*redirectedUrl;
+@property(weak, readonly) NSDate			*lastFetch;
+@property(weak, readonly) NSString		*error;
+@property(strong,readwrite) PSFeed	*feed;
 
-@property(retain,readwrite) NSMutableArray	*entries;
+@property(strong,readwrite) NSMutableArray	*entries;
 @property(readwrite) BOOL	bUpdating;
 
 @end
