@@ -40,23 +40,23 @@
 	PSEntry	*_entry;
 }
 
-@property(readonly) NSImage			*attachment;
-@property(readonly) NSString		*title;
-@property(readonly) NSDate			*published;
-@property(readonly) NSString		*author;
-@property(readonly) NSURL			*url;
-@property(readonly) NSURL			*baseUrl;
-@property(readonly) NSString		*content;
-@property(readonly) NSString		*txtContent;
-@property(readonly) NSString		*guid;
-@property(readonly) NSString		*rights;
-@property(readonly) NSDate			*created;
-@property(readonly) NSDate			*updated;
-@property(readonly) NSString		*summary;
-@property(readonly) NSString		*identifier;
-@property(readonly) NSDate			*received;
-@property(readonly) NSDate			*lastFetch;
-@property(retain,readwrite) PSEntry	*entry;
+@property(unsafe_unretained, readonly) NSImage			*attachment;
+@property(weak, readonly) NSString		*title;
+@property(weak, readonly) NSDate			*published;
+@property(weak, readonly) NSString		*author;
+@property(weak, readonly) NSURL			*url;
+@property(weak, readonly) NSURL			*baseUrl;
+@property(weak, readonly) NSString		*content;
+@property(weak, readonly) NSString		*txtContent;
+@property(weak, readonly) NSString		*guid;
+@property(weak, readonly) NSString		*rights;
+@property(weak, readonly) NSDate			*created;
+@property(weak, readonly) NSDate			*updated;
+@property(weak, readonly) NSString		*summary;
+@property(weak, readonly) NSString		*identifier;
+@property(weak, readonly) NSDate			*received;
+@property(weak, readonly) NSDate			*lastFetch;
+@property(strong,readwrite) PSEntry	*entry;
 
 - (NSImage *) read;
 - (BOOL) readB;
