@@ -56,19 +56,6 @@
     return self;
 }
 
-- (void) dealloc
-{
-	[_icon release];
-	[_logo release];
-	[_title release];
-	[_unreadCountImg release];
-	
-	[_error release];
-	
-    [_entries release];
-    
-    [super dealloc];
-}
 
 #pragma mark -
 #pragma mark ACCESSOR METHODS
@@ -100,7 +87,6 @@
 
 			if ([fm fileExistsAtPath:favIconFile isDirectory:&bIsDir] == YES)
 			{
-				[_icon autorelease];
 				_icon = [[NSImage alloc] initByReferencingFile:favIconFile];
 			}
 			else
@@ -118,7 +104,6 @@
 {
 	if (_feed)
 	{
-		[_logo autorelease];
 		_logo = [[NSImage alloc] initWithContentsOfURL:_feed.logoURL];
 		
 		return _logo;
@@ -128,7 +113,6 @@
 }
 - (NSString *) title
 {
-	[_title autorelease];
 	if (_feed != nil)
 	{		
 		@try {
@@ -156,9 +140,8 @@
 {
 	if (_feed)
 	{
-		[_unreadCountImg release];
-		_unreadCountImg = [[CTBadge alloc] init];
-		return [_unreadCountImg smallBadgeForValue:_feed.unreadCount];
+//		_unreadCountImg = [[CTBadge alloc] init];
+//		return [_unreadCountImg smallBadgeForValue:_feed.unreadCount];
 	}
 
 	return nil;
@@ -264,13 +247,12 @@
 	if (_feed != aFeed)
     {
 		NSLog(@"Initializing Feed: %@\n", aFeed.title);
-		_feed = [aFeed retain];
+		_feed = aFeed;
 
 		if ([_feed.entries count] > 0)
 		{
 			for (PSEntry *entry in _feed.entries) {
-				NSAutoreleasePool *loopPool = [[NSAutoreleasePool alloc] init];
-				Entry *newEntry = [[[Entry alloc] init] autorelease];
+				Entry *newEntry = [[Entry alloc] init];
 
 				@try {
 					newEntry.entry = entry;			
@@ -291,10 +273,6 @@
 						default:
 							break;
 					}
-				}
-				@finally {					
-					// cleanup entries, so we can loop through and add more
-					[loopPool release];
 				}
 			}
 		}
@@ -323,7 +301,7 @@
 				}
 			}
 			@finally {					
-				[newEntry release];
+				newEntry = nil;
 			}
 		}
 	}
