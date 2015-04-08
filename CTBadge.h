@@ -9,7 +9,6 @@
 //  Version: 1.5
 
 #import <Cocoa/Cocoa.h>
-#import "CTGradient.h"
 
 extern const float CTLargeBadgeSize;
 extern const float CTSmallBadgeSize;

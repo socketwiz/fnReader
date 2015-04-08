@@ -18,7 +18,7 @@ const float CTSmallLabelSize = 11.;
 @interface CTBadge (Private)
 - (NSImage *)badgeMaskOfSize:(float)size length:(unsigned)length;			//return a badge with height of <size> to fit <length> characters
 - (NSAttributedString *)labelForValue:(unsigned)value size:(unsigned)size;	//returns appropriately attributed label string (not autoreleased)
-- (CTGradient *)badgeGradient;												//gradient used to fill badge mask
+- (NSGradient *)badgeGradient;												//gradient used to fill badge mask
 @end
 
 @implementation CTBadge
@@ -93,87 +93,89 @@ const float CTSmallLabelSize = 11.;
   }
 
 - (NSImage *)badgeOfSize:(float)size forValue:(unsigned)value
-  {
-  float scaleFactor = 1;
-  
-  if(size <= 0)
-	[NSException raise:NSInvalidArgumentException format:@"%@ - (NSImage *)smallBadgeForValue:(unsigned)value: size (%f) must be positive", [self class], size];
-  else if(size <= CTSmallBadgeSize)
-	scaleFactor = size/CTSmallBadgeSize;
-  else
-	scaleFactor = size/CTLargeBadgeSize;
-  
-  //Label stuff  -----------------------------------------------
-  NSAttributedString *label;
-  NSSize labelSize;
-  
-  if(size <= CTSmallBadgeSize)
-	label = [self labelForValue:value size:CTSmallLabelSize*scaleFactor];
-  else
-	label = [self labelForValue:value size:CTLargeLabelSize*scaleFactor];
-  
-  labelSize = [label size];
-  
-  //Badge stuff  -----------------------------------------------
-  NSImage *badgeImage;	//this the image with the gradient fill
-  NSImage *badgeMask ;	//we nock out this mask from the gradient
-  
-  CTGradient *badgeGradient = [self badgeGradient];
-  
-  float shadowOpacity,
-		shadowOffset,
-        shadowBlurRadius;
-  
-  int angle;
-  
-  if(size <= CTSmallBadgeSize)
-	{
-	shadowOpacity    = .6;
-	shadowOffset     = floorf(1*scaleFactor);
-	shadowBlurRadius = ceilf(1*scaleFactor);
-	}
-  else
-	{
-	shadowOpacity    = .8;
-	shadowOffset     = ceilf(1*scaleFactor);
-	shadowBlurRadius = ceilf(2*scaleFactor);
-	}
-  
-  if ([label length] <= 3)	//Badges have different gradient angles
-	angle = -45;
-  else
-	angle = -30;
-  
-  badgeMask = [self badgeMaskOfSize:size length:[label length]];
-  
-  NSSize badgeSize = [badgeMask size];
-  NSPoint   origin = NSMakePoint(shadowBlurRadius, shadowBlurRadius+shadowOffset);
-  
-  badgeImage = [[NSImage alloc] initWithSize:NSMakeSize(badgeSize.width  + 2*shadowBlurRadius,											//sometimes it needs more
-														badgeSize.height + 2*shadowBlurRadius - shadowOffset + (size <= CTSmallBadgeSize))];	//space when small
-  
-  [badgeImage lockFocus];
-	[badgeGradient fillRect:NSMakeRect(origin.x, origin.y, floorf(badgeSize.width), floorf(badgeSize.height)) angle:angle];				//apply the gradient
-	[badgeMask compositeToPoint:origin operation: NSCompositeDestinationAtop];															//knock out the badge area
-	[label drawInRect:NSMakeRect(origin.x+floorf((badgeSize.width-labelSize.width)/2), origin.y+floorf((badgeSize.height-labelSize.height)/2), badgeSize.width, labelSize.height)];	//draw label in center
-  [badgeImage unlockFocus];
-  
-  //Final stuff   -----------------------------------------------
-  NSImage *image = [[NSImage alloc] initWithSize:[badgeImage size]];
-  
-  [image lockFocus];
-	[NSGraphicsContext saveGraphicsState];
-	  NSShadow *theShadow = [[NSShadow alloc] init];
-	  [theShadow setShadowOffset: NSMakeSize(0,-shadowOffset)];
-	  [theShadow setShadowBlurRadius:shadowBlurRadius];
-	  [theShadow setShadowColor:[[NSColor blackColor] colorWithAlphaComponent:shadowOpacity]];
-	  [theShadow set];
-	  [badgeImage compositeToPoint:NSZeroPoint operation:NSCompositeSourceOver];
-	[NSGraphicsContext restoreGraphicsState];
-  [image unlockFocus];
-  
-  
-  return image;
+{
+    float scaleFactor = 1;
+    
+    if(size <= 0)
+        [NSException raise:NSInvalidArgumentException format:@"%@ - (NSImage *)smallBadgeForValue:(unsigned)value: size (%f) must be positive", [self class], size];
+    else if(size <= CTSmallBadgeSize)
+        scaleFactor = size/CTSmallBadgeSize;
+    else
+        scaleFactor = size/CTLargeBadgeSize;
+    
+    //Label stuff  -----------------------------------------------
+    NSAttributedString *label;
+    NSSize labelSize;
+    
+    if(size <= CTSmallBadgeSize)
+        label = [self labelForValue:value size:CTSmallLabelSize*scaleFactor];
+    else
+        label = [self labelForValue:value size:CTLargeLabelSize*scaleFactor];
+    
+    labelSize = [label size];
+    
+    //Badge stuff  -----------------------------------------------
+    NSImage *badgeImage;	//this the image with the gradient fill
+    NSImage *badgeMask ;	//we nock out this mask from the gradient
+    
+    NSGradient *badgeGradient = [self badgeGradient];
+    
+    float shadowOpacity,
+    shadowOffset,
+    shadowBlurRadius;
+    
+    int angle;
+    
+    if(size <= CTSmallBadgeSize)
+    {
+        shadowOpacity    = .6;
+        shadowOffset     = floorf(1*scaleFactor);
+        shadowBlurRadius = ceilf(1*scaleFactor);
+    }
+    else
+    {
+        shadowOpacity    = .8;
+        shadowOffset     = ceilf(1*scaleFactor);
+        shadowBlurRadius = ceilf(2*scaleFactor);
+    }
+    
+    if ([label length] <= 3)	//Badges have different gradient angles
+        angle = -45;
+    else
+        angle = -30;
+    
+    badgeMask = [self badgeMaskOfSize:size length:[label length]];
+    
+    NSSize badgeSize = [badgeMask size];
+    NSPoint   origin = NSMakePoint(shadowBlurRadius, shadowBlurRadius+shadowOffset);
+    
+    badgeImage = [[NSImage alloc] initWithSize:NSMakeSize(badgeSize.width  + 2*shadowBlurRadius,											//sometimes it needs more
+                                                          badgeSize.height + 2*shadowBlurRadius - shadowOffset + (size <= CTSmallBadgeSize))];	//space when small
+    
+    [badgeImage lockFocus];
+    NSRect gradientRect = NSMakeRect(origin.x, origin.y, floorf(badgeSize.width), floorf(badgeSize.height));
+    [badgeGradient drawInRect:gradientRect angle:angle];				//apply the gradient
+    [badgeMask drawAtPoint:origin fromRect:gradientRect operation:NSCompositeDestinationAtop fraction:1.0];
+    
+    [label drawInRect:NSMakeRect(origin.x+floorf((badgeSize.width-labelSize.width)/2), origin.y+floorf((badgeSize.height-labelSize.height)/2), badgeSize.width, labelSize.height)];	//draw label in center
+    [badgeImage unlockFocus];
+    
+    //Final stuff   -----------------------------------------------
+    NSImage *image = [[NSImage alloc] initWithSize:[badgeImage size]];
+    
+    [image lockFocus];
+    [NSGraphicsContext saveGraphicsState];
+    NSShadow *theShadow = [[NSShadow alloc] init];
+    [theShadow setShadowOffset: NSMakeSize(0,-shadowOffset)];
+    [theShadow setShadowBlurRadius:shadowBlurRadius];
+    [theShadow setShadowColor:[[NSColor blackColor] colorWithAlphaComponent:shadowOpacity]];
+    [theShadow set];
+    [badgeImage compositeToPoint:NSZeroPoint operation:NSCompositeSourceOver];
+    [NSGraphicsContext restoreGraphicsState];
+    [image unlockFocus];
+    
+    
+    return image;
   }
 
 
@@ -207,13 +209,13 @@ const float CTSmallLabelSize = 11.;
 
 
 #pragma mark Misc.
-- (CTGradient *)badgeGradient
+- (NSGradient *)badgeGradient
   {
-  CTGradient *aGradient = [CTGradient gradientWithBeginningColor:[self badgeColor] endingColor:[[self badgeColor] shadowWithLevel:(1./3.)]];
+      NSGradient *aGradient = [[NSGradient alloc] initWithStartingColor:[self badgeColor] endingColor:[[self badgeColor] shadowWithLevel:(1./3.)]];
   
-  aGradient = [aGradient addColorStop:[self badgeColor] atPosition:(1./3.)];
+//  aGradient = [aGradient addColorStop:[self badgeColor] atPosition:(1./3.)];
   
-  return aGradient;
+      return aGradient;
   }
 
 - (NSAttributedString *)labelForValue:(unsigned)value size:(unsigned)size
