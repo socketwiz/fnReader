@@ -155,7 +155,7 @@ const float CTSmallLabelSize = 11.;
     [badgeImage lockFocus];
     NSRect gradientRect = NSMakeRect(origin.x, origin.y, floorf(badgeSize.width), floorf(badgeSize.height));
     [badgeGradient drawInRect:gradientRect angle:angle];				//apply the gradient
-    [badgeMask drawAtPoint:origin fromRect:gradientRect operation:NSCompositeDestinationAtop fraction:1.0];
+    [badgeMask drawAtPoint:origin fromRect:NSZeroRect operation:NSCompositeDestinationAtop fraction:1.0];
     
     [label drawInRect:NSMakeRect(origin.x+floorf((badgeSize.width-labelSize.width)/2), origin.y+floorf((badgeSize.height-labelSize.height)/2), badgeSize.width, labelSize.height)];	//draw label in center
     [badgeImage unlockFocus];
@@ -170,7 +170,7 @@ const float CTSmallLabelSize = 11.;
     [theShadow setShadowBlurRadius:shadowBlurRadius];
     [theShadow setShadowColor:[[NSColor blackColor] colorWithAlphaComponent:shadowOpacity]];
     [theShadow set];
-    [badgeImage compositeToPoint:NSZeroPoint operation:NSCompositeSourceOver];
+    [badgeImage drawAtPoint:NSZeroPoint fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
     [NSGraphicsContext restoreGraphicsState];
     [image unlockFocus];
     
@@ -180,30 +180,30 @@ const float CTSmallLabelSize = 11.;
 
 
 - (NSImage *)badgeOverlayImageForValue:(unsigned)value insetX:(float)dx y:(float)dy
-  {
-  NSImage *badgeImage = [self largeBadgeForValue:value];
-  NSImage *overlayImage = [[NSImage alloc] initWithSize:NSMakeSize(128,128)];
-  
-  //draw large icon in the upper right corner of the overlay image
-  [overlayImage lockFocus];
-	  NSSize badgeSize = [badgeImage size];
-	  [badgeImage compositeToPoint:NSMakePoint(128-dx-badgeSize.width,128-dy-badgeSize.height) operation:NSCompositeSourceOver];  
-  [overlayImage unlockFocus];
-  
-  return overlayImage;
+{
+    NSImage *badgeImage = [self largeBadgeForValue:value];
+    NSImage *overlayImage = [[NSImage alloc] initWithSize:NSMakeSize(128,128)];
+    
+    //draw large icon in the upper right corner of the overlay image
+    [overlayImage lockFocus];
+    NSSize badgeSize = [badgeImage size];
+    [badgeImage drawAtPoint:NSMakePoint(128 - dx - badgeSize.width, 128 - dy - badgeSize.height) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
+    [overlayImage unlockFocus];
+    
+    return overlayImage;
   }
 
 - (void)badgeApplicationDockIconWithValue:(unsigned)value insetX:(float)dx y:(float)dy
-  {
-  NSImage *appIcon      = [NSImage imageNamed:@"NSApplicationIcon"];
-  NSImage *badgeOverlay = [self badgeOverlayImageForValue:value insetX:dx y:dy];
-  
-  //Put the appIcon underneath the badgeOverlay
-  [badgeOverlay lockFocus];
-	[appIcon compositeToPoint:NSZeroPoint operation:NSCompositeDestinationOver];
-  [badgeOverlay unlockFocus];
-  
-  [NSApp setApplicationIconImage:badgeOverlay];
+{
+    NSImage *appIcon      = [NSImage imageNamed:@"NSApplicationIcon"];
+    NSImage *badgeOverlay = [self badgeOverlayImageForValue:value insetX:dx y:dy];
+    
+    //Put the appIcon underneath the badgeOverlay
+    [badgeOverlay lockFocus];
+    [appIcon drawAtPoint:NSZeroPoint fromRect:NSZeroRect operation:NSCompositeDestinationOver fraction:1.0];
+    [badgeOverlay unlockFocus];
+    
+    [NSApp setApplicationIconImage:badgeOverlay];
   }
 #pragma mark -
 
@@ -235,7 +235,7 @@ const float CTSmallLabelSize = 11.;
   //Label stuff
   NSString *label;
     
-  if(abs(value) < 100000)
+  if((value) < 100000)
 	label = [[NSString alloc] initWithFormat:@"%i", value];
   else
 	label = [[NSString alloc] initWithUTF8String:"\xe2\x88\x9e"];
@@ -269,7 +269,6 @@ const float CTSmallLabelSize = 11.;
 	if(size > 0 && size != [badgeMask size].height)
 	{
 		[badgeMask setName:nil];
-		[badgeMask setScalesWhenResized:YES];
 		[badgeMask setSize:NSMakeSize([badgeMask size].width*(size/[badgeMask size].height), size)];
 	}
 

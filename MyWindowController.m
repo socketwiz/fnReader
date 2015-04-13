@@ -1140,7 +1140,7 @@ decisionListener:(id<WebPolicyDecisionListener>)listener
 		
 		NSString *fmtUnread = [[NSString alloc] initWithFormat:@"%@ (%i entries, %i unread)", 
 							   [currentFeed title], 
-							   [[currentPSFeed entries] count], 
+							   [[currentPSFeed entries] count],
 							   iUnreadCount];
 		
 		[[self window] setTitle:fmtUnread];

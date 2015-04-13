@@ -126,12 +126,12 @@
 			}
 		}
 		@catch (NSException * e) {
-			_title = [[NSString alloc] initWithString:@""];		
+			_title = @"";		
 		}
 	}
 	else
 	{
-		_title = [[NSString alloc] initWithString:@""];		
+		_title = @"";		
 	}
 
 	return _title;
